@@ -85,17 +85,17 @@ function getFigure() {
 	currentFigure.col = 0;
 }
 
-function checkForCollision(offsetRow, offsetCol) {
-	for(let i = 0; i < currentFigure.obj.cells.length; i += 1) {
+function checkForCollision(offsetRow, offsetCol, matrix) {
+	for(let i = 0; i < matrix.length; i += 1) {
 		const row = offsetRow + i;
 		if(row < 0) {
 			continue;
 		}
 
-		for(let j = 0; j < currentFigure.obj.cells[i].length; j += 1) {
+		for(let j = 0; j < matrix[i].length; j += 1) {
 			const col = offsetCol + j;
 
-			if(currentFigure.obj.cells[i][j] && tetrisTable[row][col]) {
+			if(matrix[i][j] && tetrisTable[row][col]) {
 				return true;
 			}
 		}
@@ -105,7 +105,7 @@ function checkForCollision(offsetRow, offsetCol) {
 }
 
 function update() {
-	let canFall = !checkForCollision(currentFigure.row + 1, currentFigure.col);
+	let canFall = !checkForCollision(currentFigure.row + 1, currentFigure.col, currentFigure.obj.cells);
 
 	if(canFall) {
 		currentFigure.row += 1;
@@ -139,12 +139,12 @@ window.addEventListener('keydown', function(ev) {
 	console.log(ev.key);
 
 	if(ev.key === 'ArrowLeft') {
-		const canMove = currentFigure.col > 0 && !checkForCollision(currentFigure.row, currentFigure.col - 1);
+		const canMove = currentFigure.col > 0 && !checkForCollision(currentFigure.row, currentFigure.col - 1, currentFigure.obj.cells);
 		if(canMove) {
 			currentFigure.col -= 1;
 		}
 	} else if(ev.key === 'ArrowRight') {
-		const canMove = currentFigure.col + currentFigure.obj.cells[0].length < TETRIS_COLS && !checkForCollision(currentFigure.row, currentFigure.col + 1);
+		const canMove = currentFigure.col + currentFigure.obj.cells[0].length < TETRIS_COLS && !checkForCollision(currentFigure.row, currentFigure.col + 1, currentFigure.obj.cells);
 		if(canMove) {
 			currentFigure.col += 1;
 		}
@@ -152,11 +152,14 @@ window.addEventListener('keydown', function(ev) {
 	else if(ev.key === 'ArrowDown') {
 		gameSpeedOverride = 50;
 	}
-	else if(ev.key === 'q') { // rotate counter-clockwise
-		currentFigure.obj.cells = getLeftRotation(currentFigure.obj.cells);
-	}
-	else if(ev.key === 'w') { // rotate clockwise
-		currentFigure.obj.cells = getRightRotation(currentFigure.obj.cells);
+	else if(ev.key === 'q' || ev.key === 'w') {
+		const rotateFunc = (ev.key === 'q' ? getLeftRotation : getRightRotation);
+		const matrix = rotateFunc(currentFigure.obj.cells);
+
+		const canRotate = currentFigure.col >= 0 && currentFigure.col + matrix[0].length <= TETRIS_COLS && !checkForCollision(currentFigure.row, currentFigure.col, matrix);
+		if(canRotate) {
+			currentFigure.obj.cells = matrix;
+		}
 	}
 });
 
