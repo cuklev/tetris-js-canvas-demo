@@ -110,6 +110,8 @@ function update() {
 	if(canFall) {
 		currentFigure.row += 1;
 	} else {
+		const filledRows = [];
+
 		for(let i = 0; i < currentFigure.obj.cells.length; i += 1) {
 			const row = currentFigure.row + i;
 			for(let j = 0; j < currentFigure.obj.cells[i].length; j += 1) {
@@ -119,6 +121,17 @@ function update() {
 					tetrisTable[row][col] = currentFigure.obj.color;
 				}
 			}
+
+			const isRowFilled = tetrisTable[row].every(x => x);
+			if(isRowFilled) {
+				filledRows.push(row);
+			}
+		}
+
+		for(const row of filledRows) {
+			tetrisTable.splice(row, 1);
+			const emptyRow = Array.from({ length: TETRIS_COLS });
+			tetrisTable.unshift(emptyRow);
 		}
 
 		getFigure();
