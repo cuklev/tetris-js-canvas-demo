@@ -1,6 +1,6 @@
 const TETRIS_ROWS = 18;
 const TETRIS_COLS = 10;
-const TETRIS_CELL_SIZE = 20;
+const TETRIS_CELL_SIZE = 42;
 
 const tetrisTable = Array.from({ length: TETRIS_ROWS })
 	.map(() => Array.from({ length: TETRIS_COLS }).map(() => false));
@@ -21,7 +21,7 @@ const currentFigure = {
 	col: 0
 };
 
-(function() {
+const { getScore, getSpeed } = (function() {
 	const figures = [
 		{
 			color: 'red',
@@ -105,7 +105,7 @@ const currentFigure = {
 		return false;
 	}
 
-	let score = 0;
+	let gameScore = 0;
 	const scoreSystem = [0, 10, 15, 20, 25];
 
 	function update() {
@@ -138,7 +138,7 @@ const currentFigure = {
 				tetrisTable.unshift(emptyRow);
 			}
 
-			score += scoreSystem[filledRows.length];
+			gameScore += scoreSystem[filledRows.length];
 
 			getFigure();
 		}
@@ -187,4 +187,9 @@ const currentFigure = {
 			gameSpeedOverride = 0;
 		}
 	});
+
+	return {
+		getScore: () => gameScore,
+		getSpeed: () => gameSpeed
+	};
 }());

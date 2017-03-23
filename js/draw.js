@@ -10,7 +10,10 @@
 		});
 
 	canvas.width = 800;
-	canvas.height = 600;
+	canvas.height = getCellY(TETRIS_ROWS);
+
+	//canvas.style.width = canvas.width + 'px';
+	//canvas.style.height = canvas.height + 'px';
 
 	function drawFigure() {
 		const { row, col, obj: { color, cells } } = currentFigure;
@@ -43,6 +46,8 @@
 	}
 
 	function drawGrid() {
+		context.strokeStyle = 'gray';
+
 		for(let i = 0; i <= TETRIS_ROWS; i += 1) {
 			context.moveTo(0, getCellY(i));
 			context.lineTo(getCellX(TETRIS_COLS), getCellY(i));
@@ -59,9 +64,17 @@
 	function draw() {
 		context.clearRect(0, 0, canvas.width, canvas.height);
 
+		context.fillStyle = 'black';
+		context.fillRect(0, 0, getCellX(TETRIS_COLS), getCellY(TETRIS_ROWS));
+
 		drawFigure();
 		drawTable();
 		drawGrid();
+
+		context.fillStyle = 'black';
+		context.font = '40px Calibri';
+		context.fillText(`Score: ${getScore()}`.trim(), getCellX(TETRIS_COLS) + 100, 100);
+		context.fillText(`Speed: ${getSpeed()}`.trim(), getCellX(TETRIS_COLS) + 100, 140);
 
 		requestAnimationFrame(draw);
 	}
