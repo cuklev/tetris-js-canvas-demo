@@ -80,13 +80,17 @@ let gameSpeed = 100;
 function getFigure() {
 	const index = Math.random() * figures.length | 0;
 	currentFigure.obj = figures[index];
-	currentFigure.row = 0;
+	currentFigure.row = -figures[index].cells.length;
 	currentFigure.col = 0;
 }
 
 function checkForCollision(offsetRow, offsetCol) {
 	for(let i = 0; i < currentFigure.obj.cells.length; i += 1) {
 		const row = offsetRow + i;
+		if(row < 0) {
+			continue;
+		}
+
 		for(let j = 0; j < currentFigure.obj.cells[i].length; j += 1) {
 			const col = offsetCol + j;
 
@@ -129,14 +133,12 @@ window.addEventListener('keydown', function(ev) {
 	console.log(ev.key);
 
 	if(ev.key === 'ArrowLeft') {
-		console.log('Left');
-		let canMove = currentFigure.col > 0 && !checkForCollision(currentFigure.row, currentFigure.col - 1);
+		const canMove = currentFigure.col > 0 && !checkForCollision(currentFigure.row, currentFigure.col - 1);
 		if(canMove) {
 			currentFigure.col -= 1;
 		}
 	} else if(ev.key === 'ArrowRight') {
-		console.log('Right');
-		let canMove = currentFigure.col + currentFigure.obj.cells[0].length < TETRIS_COLS && !checkForCollision(currentFigure.row, currentFigure.col + 1);
+		const canMove = currentFigure.col + currentFigure.obj.cells[0].length < TETRIS_COLS && !checkForCollision(currentFigure.row, currentFigure.col + 1);
 		if(canMove) {
 			currentFigure.col += 1;
 		}
