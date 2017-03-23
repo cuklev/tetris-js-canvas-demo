@@ -68,6 +68,7 @@ function update() {
 			}
 		}
 
+		getFigure();
 	}
 
 	setTimeout(update, gameSpeed);
