@@ -4,6 +4,7 @@
 
 ### TODO:
 - optimize drawing in canvas
-- fast falling with down arrow seems to be buggy
+- fast falling with down arrow seems to be buggy, fix it
 - fix center of rotation for figures
 - improove code quality
+- implement new ideas
